@@ -1,3 +1,5 @@
+THIS IS a DRAFT
+
 
 CREATE TABLE IF NOT EXISTS Campus(
 	campus_id INT PRIMARY KEY,
