@@ -4,6 +4,47 @@ CREATE TABLE IF NOT EXISTS Campus(
 	address VARCHAR NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS Person(
+	utorid VARCHAR PRIMARY KEY,
+	last_name VARCHAR NOT NULL,
+	first_name VARCHAR NOT NULL,
+	date_of_birth DATE NOT NULL,
+	sin INT	
+);
+
+CREATE TABLE IF NOT EXISTS Student(
+	student_id INT PRIMARY KEY,
+	status VARCHAR CHECK (status in ('part-time','full-time')),
+	emergency_contact_name VARCHAR NOT NULL,
+	emergency_contact_number VARCHAR NOT NULL
+) INHERITS (Person);
+
+CREATE TABLE IF NOT EXISTS Employee(
+	eid INT PRIMARY KEY,
+	personnel_number INT NOT NULL,
+	status VARCHAR CHECK (status in ('part-time','full-time')),
+	sin INT NOT NULL,
+	role VARCHAR CHECK (role in ('Professor', 'Staff', 'Librarian'))
+) INHERITS (Person);
+
+CREATE TABLE IF NOT EXISTS Professor(
+	type VARCHAR NOT NULL,
+	rank VARCHAR NOT NULL,
+	eid INT PRIMARY KEY
+) INHERITS (Employee);
+
+CREATE TABLE IF NOT EXISTS Staff(
+	
+) INHERITS (Employee);
+
+CREATE TABLE IF NOT EXISTS Librarian(
+	
+) INHERITS (Employee);
+
+CREATE TABLE IF NOT EXISTS TeachingAssisstant(	
+	contract_hours INT NOT NULL
+) INHERITS (Staff);
+
 CREATE TABLE IF NOT EXISTS Faculty(
 	campus_id INT,
 	name VARCHAR NOT NULL,
@@ -15,7 +56,7 @@ CREATE TABLE IF NOT EXISTS Faculty(
 );
 
 CREATE TABLE IF NOT EXISTS Department(
-	department_id INT PRIMARY KEY，
+	department_id INT PRIMARY KEY,
 	name VARCHAR NOT NULL,
 	phone_number VARCHAR NOT NULL,
 	chair INT,
@@ -44,51 +85,12 @@ CREATE TABLE IF NOT EXISTS Offer(
 	CONSTRAINT OFFER_COURSE FOREIGN KEY (course_code, session) REFERENCES Course(course_code, session)
 );
 
-CREATE TABLE IF NOT EXISTS Person(
-	utorid VARCHAR PRIMARY KEY,
-	last_name VARCHAR NOT NULL,
-	first_name VARCHAR NOT NULL,
-	date_of_birth DATE NOT NULL,
-	sin INT	
-);
-
-CREATE TABLE IF NOT EXISTS Student(
-	student_id INT PRIMARY KEY,
-	status VARCHAR CHECK (status = 'part-time' or 'full-time'),
-	emergency_contact_name VARCHAR NOT NULL,
-	emergency_contact_number VARCHAR NOT NULL
-) INHERITS (Person);
-
-CREATE TABLE IF NOT EXISTS Employee(
-	eid INT PRIMARY KEY,
-	personnel_number INT NOT NULL，
-	status VARCHAR CHECK (status = 'part-time' or 'full-time'),
-	sin INT NOT NULL,
-	role VARCHAR CHECK (role = 'Professor' or 'Staff' or 'Librarian')
-) INHERITS (Person);
-
-CREATE TABLE IF NOT EXISTS Professor(
-	type VARCHAR NOT NULL,
-	rank VARCHAR NOT NULL,
-)INHERITS (Employee);
-
-CREATE TABLE IF NOT EXISTS Staff(
-	
-)INHERITS (Employee);
-
-CREATE TABLE IF NOT EXISTS Librarian(
-	
-)INHERITS (Employee);
-
-CREATE TABLE IF NOT EXISTS TeachingAssisstant(	
-	contract_hours INT NOT NULL
-)INHERITS (Staff);
 
 CREATE TABLE IF NOT EXISTS Belong(
 	campus_id INT,
 	utorid VARCHAR,
 	CONSTRAINT BELONG_CAMPUS FOREIGN KEY (campus_id) REFERENCES Campus(campus_id),
-	CONSTRAINT BELONG_PERSON FOREIGN KEY (utorid) REFERENCES Person(utorid)
+	CONSTRAINT BELONG_PERSON FOREIGN KEY (utorid) REFERENCES Person(utorid),
 	CONSTRAINT BELONG_UNIQUE UNIQUE (utorid)
 );
 
